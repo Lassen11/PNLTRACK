@@ -8,7 +8,7 @@ import { TransactionTable, Transaction } from "@/components/TransactionTable";
 import { TransactionDialog } from "@/components/TransactionDialog";
 import { MonthlyAnalytics } from "@/components/MonthlyAnalytics";
 import { calculateKPIs } from "@/lib/supabaseData";
-import { Plus, TrendingUp, TrendingDown, DollarSign, Target, ArrowUpFromLine, Wallet, LogOut, CalendarIcon, Users, Upload, Building2 } from "lucide-react";
+import { Plus, TrendingUp, TrendingDown, DollarSign, Target, ArrowUpFromLine, Wallet, LogOut, CalendarIcon, Users, Upload, Building2, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -654,6 +654,11 @@ export default function Dashboard() {
               <Building2 className="w-4 h-4 mr-2" />
               <span className="hidden xs:inline">Все проекты</span>
               <span className="xs:hidden">Проекты</span>
+            </Button>
+            <Button variant="outline" onClick={() => navigate("/profile")}>
+              <User className="w-4 h-4 mr-2" />
+              <span className="hidden xs:inline">Профиль</span>
+              <span className="xs:hidden">Профиль</span>
             </Button>
             <Button variant="ghost" onClick={handleSignOut}>
               <LogOut className="w-4 h-4 mr-2" />

@@ -323,6 +323,12 @@ export default function Clients() {
               </p>
             </div>
           </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => navigate("/profile")}>
+              <User className="w-4 h-4 mr-2" />
+              Профиль
+            </Button>
+          </div>
         </div>
 
         {/* Summary Cards */}

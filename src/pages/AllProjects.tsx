@@ -5,7 +5,7 @@ import { MonthlyAnalytics } from "@/components/MonthlyAnalytics";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { calculateKPIs } from "@/lib/supabaseData";
-import { TrendingUp, TrendingDown, DollarSign, Target, ArrowUpFromLine, Wallet, ArrowLeft, Building2 } from "lucide-react";
+import { TrendingUp, TrendingDown, DollarSign, Target, ArrowUpFromLine, Wallet, ArrowLeft, Building2, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
@@ -169,6 +169,12 @@ export default function AllProjects() {
                 Общая аналитика по всем компаниям
               </p>
             </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => navigate("/profile")}>
+              <User className="w-4 h-4 mr-2" />
+              Профиль
+            </Button>
           </div>
         </div>
 
