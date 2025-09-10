@@ -33,3 +33,4 @@ if (fs.existsSync(indexPath)) {
 
 fixMimeTypes(buildDir);
 console.log('MIME type fix completed');
+
