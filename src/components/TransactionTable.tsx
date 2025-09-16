@@ -23,6 +23,8 @@ export interface Transaction {
   installment_period?: number | null;
   lump_sum?: number | null;
   company: string;
+  account_from?: string | null; // Счет списания (для расходов)
+  account_to?: string | null;   // Счет поступления (для доходов)
 }
 
 interface TransactionTableProps {
@@ -75,6 +77,7 @@ export function TransactionTable({ transactions, onEdit, onDelete, onCopy }: Tra
               <TableHead>Категория</TableHead>
               <TableHead>Подкатегория</TableHead>
               <TableHead>Клиент</TableHead>
+              <TableHead>Счет</TableHead>
               <TableHead className="text-right">Сумма</TableHead>
               <TableHead>Описание</TableHead>
               <TableHead className="w-20">Действия</TableHead>
@@ -101,6 +104,12 @@ export function TransactionTable({ transactions, onEdit, onDelete, onCopy }: Tra
                 <TableCell>{transaction.category}</TableCell>
                 <TableCell>{transaction.subcategory || '-'}</TableCell>
                 <TableCell>{transaction.client_name || '-'}</TableCell>
+                <TableCell>
+                  {transaction.type === 'income' 
+                    ? (transaction.account_to || '-') 
+                    : (transaction.account_from || '-')
+                  }
+                </TableCell>
                 <TableCell className={cn(
                   "text-right font-semibold",
                   transaction.type === 'income' ? 'amount-positive' : 'amount-negative'
@@ -190,6 +199,20 @@ export function TransactionTable({ transactions, onEdit, onDelete, onCopy }: Tra
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-muted-foreground">Клиент:</span>
                   <span className="text-sm">{transaction.client_name}</span>
+                </div>
+              )}
+              
+              {(transaction.account_from || transaction.account_to) && (
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-muted-foreground">
+                    {transaction.type === 'income' ? 'Счет поступления:' : 'Счет списания:'}
+                  </span>
+                  <span className="text-sm">
+                    {transaction.type === 'income' 
+                      ? (transaction.account_to || '-') 
+                      : (transaction.account_from || '-')
+                    }
+                  </span>
                 </div>
               )}
               

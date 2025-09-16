@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       transactions: {
         Row: {
+          account_from: string | null
+          account_to: string | null
           amount: number
           category: string
           client_name: string | null
@@ -36,6 +38,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          account_from?: string | null
+          account_to?: string | null
           amount: number
           category: string
           client_name?: string | null
@@ -56,6 +60,8 @@ export type Database = {
           user_id: string
         }
         Update: {
+          account_from?: string | null
+          account_to?: string | null
           amount?: number
           category?: string
           client_name?: string | null

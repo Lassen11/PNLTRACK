@@ -78,7 +78,9 @@ export function TransactionDialog({ open, onOpenChange, transaction, onSave, cop
     contractAmount: '',
     firstPayment: '',
     installmentPeriod: '',
-    lumpSum: ''
+    lumpSum: '',
+    accountFrom: '', // Счет списания (для расходов)
+    accountTo: ''    // Счет поступления (для доходов)
   });
 
   useEffect(() => {
@@ -95,7 +97,9 @@ export function TransactionDialog({ open, onOpenChange, transaction, onSave, cop
         contractAmount: transaction.contract_amount?.toString() || '',
         firstPayment: transaction.first_payment?.toString() || '',
         installmentPeriod: transaction.installment_period?.toString() || '',
-        lumpSum: (transaction as any).lump_sum?.toString() || ''
+        lumpSum: (transaction as any).lump_sum?.toString() || '',
+        accountFrom: transaction.account_from || '',
+        accountTo: transaction.account_to || ''
       });
     } else {
       setFormData({
@@ -110,7 +114,9 @@ export function TransactionDialog({ open, onOpenChange, transaction, onSave, cop
         contractAmount: '',
         firstPayment: '',
         installmentPeriod: '',
-        lumpSum: ''
+        lumpSum: '',
+        accountFrom: '',
+        accountTo: ''
       });
     }
   }, [transaction, open]);
@@ -199,7 +205,10 @@ export function TransactionDialog({ open, onOpenChange, transaction, onSave, cop
           }
           return undefined;
         })()
-      })
+      }),
+      // Добавляем поля счетов в зависимости от типа операции
+      ...(formData.type === 'expense' && formData.accountFrom && { account_from: formData.accountFrom }),
+      ...(formData.type === 'income' && formData.accountTo && { account_to: formData.accountTo })
     };
 
     let taxTransaction = undefined;
@@ -454,6 +463,31 @@ export function TransactionDialog({ open, onOpenChange, transaction, onSave, cop
               rows={3}
             />
           </div>
+
+          {/* Поля счетов */}
+          {formData.type === 'expense' && (
+            <div className="space-y-2">
+              <Label htmlFor="accountFrom">Счет списания</Label>
+              <Input
+                id="accountFrom"
+                value={formData.accountFrom}
+                onChange={(e) => setFormData({ ...formData, accountFrom: e.target.value })}
+                placeholder="Например: Расчетный счет, Касса, Карта..."
+              />
+            </div>
+          )}
+
+          {formData.type === 'income' && (
+            <div className="space-y-2">
+              <Label htmlFor="accountTo">Счет поступления</Label>
+              <Input
+                id="accountTo"
+                value={formData.accountTo}
+                onChange={(e) => setFormData({ ...formData, accountTo: e.target.value })}
+                placeholder="Например: Расчетный счет, Касса, Карта..."
+              />
+            </div>
+          )}
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

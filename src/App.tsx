@@ -10,6 +10,8 @@ import Auth from "./pages/Auth";
 import AllProjects from "./pages/AllProjects";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import { TwentyFirstToolbar } from "@21st-extension/toolbar-react";
+import { ReactPlugin } from "@21st-extension/react";
 
 const queryClient = new QueryClient();
 
@@ -19,6 +21,11 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <TwentyFirstToolbar 
+          config={{
+            plugins: [ReactPlugin]
+          }}
+        />
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Dashboard />} />

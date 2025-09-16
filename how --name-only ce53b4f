@@ -1,0 +1,5 @@
+[33mce53b4f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix: add profile button to all pages navigation
+[33m9aba5b6[m feat: add user profile management with email and password update functionality
+[33m7dc0bc7[m fix: simplify Vite config to use standard dist output and remove problematic script
+[33md440087[m fix: add MIME type fixes with .htaccess and .mjs conversion script
+[33m6da3493[m feat: add Supabase integration and nginx config for Timeweb deployment
