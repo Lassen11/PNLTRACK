@@ -12,7 +12,10 @@ const mysqlConfig = {
   user: 'gen_user',
   password: 'dfguZ_H:+>$^~5',
   database: 'default_db',
-  charset: 'utf8mb4'
+  charset: 'utf8mb4',
+  ssl: {
+    rejectUnauthorized: false
+  }
 };
 
 async function migrateData() {
@@ -23,29 +26,7 @@ async function migrateData() {
   const connection = await mysql.createConnection(mysqlConfig);
   
   try {
-    // 1. Миграция пользователей
-    console.log('📊 Мигрируем пользователей...');
-    const { data: users, error: usersError } = await supabase
-      .from('users')
-      .select('*');
-    
-    if (usersError) {
-      console.error('Ошибка при получении пользователей:', usersError);
-      return;
-    }
-    
-    if (users && users.length > 0) {
-      for (const user of users) {
-        await connection.execute(
-          `INSERT INTO users (id, email, created_at, updated_at) VALUES (?, ?, ?, ?)
-           ON DUPLICATE KEY UPDATE email = VALUES(email), updated_at = VALUES(updated_at)`,
-          [user.id, user.email, user.created_at, user.updated_at]
-        );
-      }
-      console.log(`✅ Мигрировано ${users.length} пользователей`);
-    }
-    
-    // 2. Миграция транзакций
+    // 1. Миграция транзакций (пользователи создаются автоматически)
     console.log('💰 Мигрируем транзакции...');
     const { data: transactions, error: transactionsError } = await supabase
       .from('transactions')
@@ -58,8 +39,21 @@ async function migrateData() {
     }
     
     if (transactions && transactions.length > 0) {
+      // Сначала создаем пользователей из транзакций
+      const uniqueUserIds = [...new Set(transactions.map(t => t.user_id))];
+      console.log(`👤 Создаем ${uniqueUserIds.length} пользователей...`);
+      
+      for (const userId of uniqueUserIds) {
+        await connection.query(
+          `INSERT IGNORE INTO users (id, email, created_at, updated_at) VALUES (?, ?, NOW(), NOW())`,
+          [userId, `user-${userId}@migrated.com`]
+        );
+      }
+      console.log(`✅ Создано ${uniqueUserIds.length} пользователей`);
+      
+      // Теперь мигрируем транзакции
       for (const transaction of transactions) {
-        await connection.execute(
+        await connection.query(
           `INSERT INTO transactions (
             id, user_id, date, type, category, subcategory, amount, description,
             client_name, contract_amount, first_payment, installment_period, lump_sum,
@@ -112,7 +106,7 @@ async function migrateData() {
       console.log(`✅ Мигрировано ${transactions.length} транзакций`);
     }
     
-    // 3. Проверяем результаты
+    // 2. Проверяем результаты
     console.log('🔍 Проверяем результаты миграции...');
     
     const [userCount] = await connection.execute('SELECT COUNT(*) as count FROM users');
