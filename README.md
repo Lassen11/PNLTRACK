@@ -36,6 +36,19 @@ npm i
 npm run dev
 ```
 
+## Supabase Setup
+
+This project uses Supabase for database and authentication. To set up Supabase:
+
+1. Create a Supabase project at [supabase.com](https://supabase.com)
+2. Create the required tables (see `SUPABASE_SETUP.md` for details)
+3. Set up environment variables:
+   ```
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+4. For production deployment, see `TIMEWEB_DEPLOY.md`
+
 **Edit a file directly in GitHub**
 
 - Navigate to the desired file(s).
@@ -59,6 +72,7 @@ This project is built with:
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase (Database & Authentication)
 
 ## How can I deploy this project?
 

@@ -1,11 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Transaction } from '@/components/TransactionTable';
-import { isMySQL } from '@/config/database';
-import { getTransactions as getMySQLTransactions, getFinancialStats as getMySQLStats } from '@/lib/mysqlData';
-import { useAuth } from './useAuthMySQL';
-
-// Импорты для Supabase (если нужно)
-// import { supabase } from '@/integrations/supabase/client';
+import { getTransactions, getFinancialStats } from '@/lib/supabaseData';
+import { useAuth } from './useAuth';
 
 export const useTransactions = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -23,21 +19,8 @@ export const useTransactions = () => {
       setLoading(true);
       setError(null);
 
-      if (isMySQL()) {
-        const data = await getMySQLTransactions(user.id);
-        setTransactions(data);
-      } else {
-        // Здесь будет код для Supabase
-        // const { data, error } = await supabase
-        //   .from('transactions')
-        //   .select('*')
-        //   .eq('user_id', user.id)
-        //   .order('date', { ascending: false });
-        
-        // if (error) throw error;
-        // setTransactions(data || []);
-        setTransactions([]);
-      }
+      const data = await getTransactions(user.id);
+      setTransactions(data);
     } catch (err) {
       console.error('Error fetching transactions:', err);
       setError(err instanceof Error ? err.message : 'Ошибка загрузки транзакций');
@@ -80,19 +63,8 @@ export const useFinancialStats = (startDate?: string, endDate?: string) => {
       setLoading(true);
       setError(null);
 
-      if (isMySQL()) {
-        const data = await getMySQLStats(user.id, startDate, endDate);
-        setStats(data);
-      } else {
-        // Здесь будет код для Supabase
-        setStats({
-          totalIncome: 0,
-          totalExpense: 0,
-          incomeCount: 0,
-          expenseCount: 0,
-          profit: 0
-        });
-      }
+      const data = await getFinancialStats(user.id, startDate, endDate);
+      setStats(data);
     } catch (err) {
       console.error('Error fetching stats:', err);
       setError(err instanceof Error ? err.message : 'Ошибка загрузки статистики');
